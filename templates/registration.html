@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/icomoon/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <title>Register</title>
+    <style>
+        .btn-primary {
+            background-color: rgb(30, 94, 172) !important;
+        }
+
+        .text-blue {
+            color: rgb(30, 94, 172) !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <!-- Image on Left -->
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Unwind Logo" class="img-fluid">
+                </div>
+                <!-- Form on Right -->
+                <div class="col-md-6 contents">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="mb-4">
+                                <h3>Sign Up to <strong>Unwind</strong></h3>
+                                <p class="mb-4">Escape the Ordinary, One Clip at a Time.</p>
+                            </div>
+                            <form action="{{ url_for('register') }}" method="post">
+                                {{ form.hidden_tag() }}
+                                <div class="form-group first">
+                                    <label for="email">Email</label>
+                                    {{ form.email(class="form-control") }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="fullname">Full Name</label>
+                                    {{ form.fullname(class="form-control") }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    {{ form.username(class="form-control") }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    {{ form.password(class="form-control") }}
+                                </div>
+                                <div class="form-group last mb-4">
+                                    <label for="confirm_password">Confirm Password</label>
+                                    {{ form.confirm_password(class="form-control") }}
+                                </div>
+                                {{ form.submit(class="btn text-white btn-block btn-primary") }}
+                                <span class="d-block text-left my-4 text-muted">
+                                    Already have an account?
+                                    <a href="{{ url_for('login') }}" class="text-blue">Sign in</a>
+                                </span>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

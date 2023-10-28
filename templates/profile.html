@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        /* Add some basic styling */
+        #profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;  /* Makes the image circular */
+            margin: 20px auto;
+            display: block;
+            cursor: pointer;
+        }
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Profile Picture -->
+    
+    <img id="profile-picture" src="{{ url_for('static', filename='images/profile_pic/' + profile_pic) }}" alt="Profile Picture" onclick="document.getElementById('upload').click();">
+
+
+    <!-- Form to update profile -->
+    <form action="{{ url_for('profile') }}" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <!-- Hidden file input for profile picture -->
+        <input type="file" id="upload" name="profile_pic" style="display: none;" onchange="this.form.submit();">
+
+        <!-- Display and edit email -->
+        <div>
+            <label for="email">Email:</label>
+            {{ form.email() }}
+        </div>
+        
+        <!-- Display and edit full name -->
+        <div>
+            <label for="fullname">Full Name:</label>
+            {{ form.fullname() }}
+        </div>
+
+        <!-- Display and edit username -->
+        <div>
+            <label for="username">Username:</label>
+            {{ form.username() }}
+        </div>
+
+        <!-- Password field -->
+        <div>
+            <label for="password">Password:</label>
+            {{ form.password() }}
+        </div>
+
+        <!-- Confirm password field -->
+        <div>
+            <label for="confirm_password">Confirm Password:</label>
+            {{ form.confirm_password() }}
+        </div>
+
+        <div>
+            <input type="submit" value="Update">
+        </div>
+    </form>
+</body>
+</html>
