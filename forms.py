@@ -28,28 +28,6 @@ class LoginForm(FlaskForm):
     remember = BooleanField('Remember Me')
     submit = SubmitField('Log In')
 
-"""
-class UpdateAccountForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    fullname = StringField('Full Name', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('New Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Update')
-
-    def validate_username(self, username):
-        User = current_app.config['USER_MODEL']
-        user = User.query.filter_by(username=username.data).first()
-        if user and user.username != current_user.username:
-            raise ValidationError('That username is taken. Please choose a different one.')
-
-    def validate_email(self, email):
-        User = current_app.config['USER_MODEL']
-        user = User.query.filter_by(email=email.data).first()
-        if user and user.email != current_user.email:
-            raise ValidationError('That email is taken. Please choose a different one.')
-"""
-
 class UpdateAccountForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     fullname = StringField('Full Name', validators=[DataRequired()])

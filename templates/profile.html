@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/icomoon/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
     <style>
         /* Add some basic styling */
         #profile-picture {
@@ -14,58 +22,87 @@
             display: block;
             cursor: pointer;
         }
-        form {
-            max-width: 400px;
-            margin: 0 auto;
+        
+        .btn-primary {
+            background-color: rgb(30, 94, 172) !important;
+        }
+
+        .text-blue {
+            color: rgb(30, 94, 172) !important;
         }
     </style>
 </head>
+
 <body>
-    <!-- Profile Picture -->
+
+    <div class="content">
+        <div class="container">
+            <div class="row">
+                <!-- Image on Left -->
+                <div class="col-md-6">
+                    <img id="profile-picture" src="{{ url_for('static', filename='images/profile_pic/' + profile_pic) }}" alt="Profile Picture" onclick="document.getElementById('upload').click();">
+                </div>
+
+                <!-- Form on Right -->
+                <div class="col-md-6 contents">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="mb-4">
+                                <h3>Profile Details for <strong>{{ form.username.data }}</strong></h3>
+                                <p class="mb-4">Manage your Unwind account settings.</p>
+                            </div>
+                            <form action="{{ url_for('profile') }}" method="post" enctype="multipart/form-data">
+                                {{ form.hidden_tag() }}
+
+                                <!-- Hidden file input for profile picture -->
+                                <input type="file" id="upload" name="profile_pic" style="display: none;" onchange="this.form.submit();">
+
+                                <!-- Display and edit email -->
+                                <div class="form-group">
+                                    <label for="email">Email:</label>
+                                    {{ form.email(class="form-control") }}
+                                </div>
+                                
+                                <!-- Display and edit full name -->
+                                <div class="form-group">
+                                    <label for="fullname">Full Name:</label>
+                                    {{ form.fullname(class="form-control") }}
+                                </div>
+
+                                <!-- Display and edit username -->
+                                <div class="form-group">
+                                    <label for="username">Username:</label>
+                                    {{ form.username(class="form-control") }}
+                                </div>
+
+                                <!-- Password field -->
+                                <div class="form-group">
+                                    <label for="password">Password:</label>
+                                    {{ form.password(class="form-control") }}
+                                </div>
+
+                                <!-- Confirm password field -->
+                                <div class="form-group">
+                                    <label for="confirm_password">Confirm Password:</label>
+                                    {{ form.confirm_password(class="form-control") }}
+                                </div>
+
+                                <input type="submit" value="Update" class="btn text-white btn-block btn-primary">
+                            </form>
+                            
+                            <!-- Cancel button linking to home route -->
+                            <a href="{{ url_for('home') }}" class="btn btn-block btn-secondary mt-3">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
-    <img id="profile-picture" src="{{ url_for('static', filename='images/profile_pic/' + profile_pic) }}" alt="Profile Picture" onclick="document.getElementById('upload').click();">
-
-
-    <!-- Form to update profile -->
-    <form action="{{ url_for('profile') }}" method="post" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-
-        <!-- Hidden file input for profile picture -->
-        <input type="file" id="upload" name="profile_pic" style="display: none;" onchange="this.form.submit();">
-
-        <!-- Display and edit email -->
-        <div>
-            <label for="email">Email:</label>
-            {{ form.email() }}
-        </div>
-        
-        <!-- Display and edit full name -->
-        <div>
-            <label for="fullname">Full Name:</label>
-            {{ form.fullname() }}
-        </div>
-
-        <!-- Display and edit username -->
-        <div>
-            <label for="username">Username:</label>
-            {{ form.username() }}
-        </div>
-
-        <!-- Password field -->
-        <div>
-            <label for="password">Password:</label>
-            {{ form.password() }}
-        </div>
-
-        <!-- Confirm password field -->
-        <div>
-            <label for="confirm_password">Confirm Password:</label>
-            {{ form.confirm_password() }}
-        </div>
-
-        <div>
-            <input type="submit" value="Update">
-        </div>
-    </form>
 </body>
 </html>
