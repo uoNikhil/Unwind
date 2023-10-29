@@ -31,16 +31,20 @@
         .action-buttons {
             position: absolute;
             right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             z-index: 10;
         }
+
         .action-buttons button {
-            display: block;
-            margin-bottom: 15px;
+            margin: 15px 0;
             opacity: 0.7;
             transition: opacity 0.3s;
         }
+
         .action-buttons button:hover {
             opacity: 1;
         }
@@ -67,6 +71,44 @@
             border-radius: 50%; 
             object-fit: cover;
         }
+        .action-buttons .profile-icon {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .action-buttons .middle-icons {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 20px;
+        }
+
+        .action-buttons .logout-icon {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+        }
+
+        .comment-section .close-chat {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        .comment-section {
+            background-color: white;
+            position: absolute;
+            right: 20px;
+            bottom: 70px; /* Adjusted position */
+            width: 350px; /* Enlarged width */
+            max-height: 500px; /* Increased height */
+            overflow-y: auto; 
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+
     </style>
 </head>
 
@@ -80,24 +122,33 @@
         </video>
         <!-- Overlay buttons -->
         <div class="action-buttons">
-
-            <button class="btn btn-lg btn-link" onclick="window.location.href='{{ url_for('profile') }}'">
+                <!-- Profile icon -->
+            <button class="btn btn-lg btn-link profile-icon" onclick="window.location.href='{{ url_for('profile') }}'">
                 <img src="{{ url_for('static', filename='images/profile_pic/profile_pic_default.png') }}" alt="Profile Pic" class="profile-pic-icon">
             </button>
-            <!-- Like icon with toggle behavior -->
-            <button id="likeButton" class="btn btn-lg btn-link" onclick="toggleLike()">
-                <i class="far fa-heart"></i>
-            </button>
-            <!-- Share icon -->
-            <button class="btn btn-lg btn-link">
-                <i class="fas fa-share-alt"></i>
-            </button>
-            <!-- Comment icon and comment box -->
-            <button class="btn btn-lg btn-link" onclick="toggleCommentBox()">
-                <i class="fas fa-comment"></i>
-            </button>
+            <!-- Like and Comment icons -->
+            <div class="middle-icons">
+                <button id="likeButton" class="btn btn-lg btn-link" onclick="toggleLike()">
+                    <i class="far fa-heart"></i>
+                </button>
+                <button class="btn btn-lg btn-link">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+                <button id="commentButton" class="btn btn-lg btn-link" onclick="toggleCommentSection()">
+                    <i class="fas fa-comment"></i>
+                </button>
 
-            <button class="btn btn-lg btn-link" onclick="window.location.href='{{ url_for('logout') }}'">
+                <div class="comment-section p-3">
+                    <div class="comments-list mb-3">
+                        <!-- This is where the list of comments will be appended -->
+                    </div>
+                    <textarea class="comment-input form-control mb-2" placeholder="Add your comment..."></textarea>
+                    <button class="btn btn-primary" onclick="submitComment()">Submit</button>
+                </div>
+
+            </div>
+            <!-- Logout icon -->
+            <button class="btn btn-lg btn-link logout-icon" onclick="window.location.href='{{ url_for('logout') }}'">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
@@ -122,6 +173,7 @@
         let currentVideoIndex = 0;
         const videoPlayer = document.getElementById('videoPlayer');
 
+
         document.addEventListener('keydown', function(event) {
             // If UP arrow is pressed
             if (event.keyCode == 38) {
@@ -134,6 +186,18 @@
                 changeVideo();
             }
         });
+
+        document.addEventListener('click', function(event) {
+            const commentSection = document.querySelector('.comment-section');
+            const commentIcon = document.getElementById('commentButton');
+            const isClickInside = commentSection.contains(event.target) || commentIcon.contains(event.target);
+
+            // If the click is outside the chat section and the comment icon, close the chat section.
+            if (!isClickInside && commentSection.style.display === 'block') {
+                commentSection.style.display = 'none';
+            }
+        });
+
 
             // Initialize video states
         const videoStates = videoFiles.map(video => ({
@@ -166,32 +230,58 @@
             updateUIForCurrentVideo();
         }
 
+        function submitComment() {
+            const commentBox = document.querySelector('.comment-input');
+            const comment = commentBox.value.trim();
+            if (comment) {
+                addComment(comment);
+                displayComment(comment);
+                commentBox.value = '';
+            }
+        }
+
         function addComment(comment) {
             const currentState = videoStates[currentVideoIndex];
             currentState.comments.push(comment);
         }
 
-        function toggleCommentBox() {
-            const commentBox = document.querySelector('.comment-box');
-            commentBox.style.display = commentBox.style.display === 'none' ? 'block' : 'none';
+        function displayComment(comment) {
+            const commentList = document.querySelector('.comments-list');
+            const commentElement = document.createElement('div');
+            commentElement.classList.add('comment-item');
+            commentElement.textContent = comment;
+            commentList.prepend(commentElement);
         }
 
-        // Add an event listener for the textarea to capture and store the comment when it's being typed
-        document.querySelector('.comment-input').addEventListener('keyup', function(event) {
-            const comment = event.target.value.trim();
-            if (comment) {
-                addComment(comment);
-            }
-        });
+        function displayAllComments() {
+            const commentList = document.querySelector('.comments-list');
+            commentList.innerHTML = '';  // Clear previous comments
+            const currentComments = videoStates[currentVideoIndex].comments;
+            currentComments.forEach(comment => {
+                displayComment(comment);
+            });
+        }
 
-        // Call updateUIForCurrentVideo in the changeVideo function so that the UI updates as you switch videos.
+        function toggleCommentSection() {
+            const commentSection = document.querySelector('.comment-section');
+            commentSection.style.display = commentSection.style.display === 'none' ? 'block' : 'none';
+            displayAllComments();
+        }
+
+        // Attach the toggleCommentSection to the comment icon button
+        
+        
+
+        // Call displayAllComments in the changeVideo function so that the comments update as you switch videos.
         function changeVideo() {
             videoPlayer.querySelector('source').setAttribute('src', videoPath + videoFiles[currentVideoIndex]);
             videoPlayer.load();
             videoPlayer.play();
-            updateUIForCurrentVideo(); // Add this line
+            updateUIForCurrentVideo();
+            displayAllComments();  // Add this line
         }
 
+        // Call updateUIForCurrentVideo in the changeVideo function so that the UI updates as you switch videos.
         // Initially set the UI for the first video
         updateUIForCurrentVideo();
 
